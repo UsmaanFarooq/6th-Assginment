@@ -25,10 +25,11 @@ const showImages = (images) => {
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
     gallery.appendChild(div)
   })
-
+  loadingSpinner(false);
 }
 
 const getImages = (query) => {
+  loadingSpinner(true);
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
     .then(data => showImages(data.hits))
@@ -39,13 +40,16 @@ let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
   element.classList.add('added');
-  
   let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
   } else {
-    alert('Hey, Already added !')
+    element.classList.remove('added');   
   }
+  const imageCount = document.getElementById('total-image');
+  const image = parseInt(imageCount.value);
+  const newImageCount = image + 1;
+  imageCount.value = newImageCount;  
 }
 let timer
 const createSlider = () => {
@@ -54,7 +58,7 @@ const createSlider = () => {
     alert('Select at least 2 image.')
     return;
   }
-  // crate slider previous next area
+  // create slider previous next area....
   sliderContainer.innerHTML = '';
   const prevNext = document.createElement('div');
   prevNext.className = "prev-next d-flex w-100 justify-content-between align-items-center";
@@ -68,19 +72,24 @@ const createSlider = () => {
   // hide image area
   imagesArea.style.display = 'none';
   const timeDuration = document.getElementById('duration').value;
-  sliders.forEach(slide => {
-    let item = document.createElement('div')
-    item.className = "slider-item";
-    item.innerHTML = `<img class="w-100"
-    src="${slide}"
-    alt="">`;
-    sliderContainer.appendChild(item)
-  })
-  changeSlide(0)
-  timer = setInterval(function () {
-    slideIndex++;
-    changeSlide(slideIndex);
-  }, timeDuration);
+  if(timeDuration < 0){
+    alert("Image slide duration cannot be negative")
+  }
+  else{
+    sliders.forEach(slide => {
+      let item = document.createElement('div')
+      item.className = "slider-item";
+      item.innerHTML = `<img class="w-100"
+      src="${slide}"
+      alt="">`;
+      sliderContainer.appendChild(item)
+    })
+    changeSlide(0)
+    timer = setInterval(function () {
+      slideIndex++;
+      changeSlide(slideIndex);
+    }, timeDuration);
+  }                      
 }
 
 // change slider index 
@@ -125,5 +134,15 @@ sliderBtn.addEventListener('click', function () {
 document.getElementById("search").addEventListener("keypress", function (event){
   if(event.key === 'Enter'){
     document.getElementById("search-btn").click();
+    // loadingSpinner()
   }
 });
+// spinner....
+const loadingSpinner = (show) => {
+  const spinner = document.getElementById('loading-spinner');
+  if(show){
+    spinner.classList.remove('d-none')
+  }else{
+    spinner.classList.add('d-none')
+  }
+}
