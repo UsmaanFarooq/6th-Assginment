@@ -49,7 +49,7 @@ const selectItem = (event, img) => {
   const imageCount = document.getElementById('total-image');
   const image = parseInt(imageCount.value);
   const newImageCount = image + 1;
-  imageCount.value = newImageCount;  
+  imageCount.value = newImageCount; 
 }
 let timer
 const createSlider = () => {
