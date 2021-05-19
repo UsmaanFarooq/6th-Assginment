@@ -1,1 +1,1 @@
-# <a href="https://usmanfaroqq.github.io/6th-Assginment/"> Live Site </a>
+# <a href="https://usmanfaroqq.github.io/Javascript-Bug-Solving-/"> Live Site </a>
